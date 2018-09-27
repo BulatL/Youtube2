@@ -1,0 +1,24 @@
+﻿@model  IEnumerable<Youtube.ViewModels.VideoDTO>
+
+
+<div class="container-fluid" style="margin-top:5em;">
+    <div class="container-fluid" id="videoContainer">
+        <div class="row">
+            @foreach (var video in Model)
+            {
+                <div class="col-lg-3">
+                    <div class="Video" style="text-align:center;">
+                        <a href="http://localhost:55157/videos/@video.Id" style="color:#00961a;font-weight: bold;">
+                            <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                            <div class="caption">
+                                <h3>@video.Name</h3>
+                            </div>
+                        </a>
+                        <a href="http://localhost:55157/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
+                        <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

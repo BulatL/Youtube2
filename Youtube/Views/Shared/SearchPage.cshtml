@@ -1,0 +1,367 @@
+﻿@model Youtube.ViewModels.SearchViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
+
+</head>
+<body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+                 margin: 0;
+                 padding: 0;
+                 background-size: inherit;
+                 background-position: center;
+                 font-family: sans-serif;">
+
+
+    <script>
+        var globalResponse;
+        $(document).ready(function (e) {
+            $.get('http://localhost:55157/loggedInUser', function (data) {
+                if (data == null) {
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
+                        '<li><a href="http://localhost:55157/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
+                    );
+                }
+                else {
+                    var navbarHeader = $('.navbar-header');
+                    navbarHeader.append(
+                        '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                    );
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                    );
+                }
+            });
+        });
+
+        function searchFn() {
+            var searchInput = $('#searchInput');
+            var searchText = searchInput.val().trim();
+            alert(searchText + " nesto");
+            var url = 'http://localhost:55157/search/' + searchText;
+            window.location.href = url;
+        };
+
+        function searchAll() {
+            var searchInput = $('#searchInput');
+            var searchText = searchInput.val().trim();
+
+            var searchVideo = false;
+            var searchUser = false;
+            var searchComment = false;
+
+            var sortVideoBy = "";
+            var sortUserBy = "";
+            var sortCommentBy = "";
+            var ascDesc = "";
+
+            var checkboxVideo = document.getElementById('searchVideo');
+            if (checkboxVideo.checked) {
+                searchVideo = true;
+            } else {
+                searchVideo = false;
+            }
+
+            var checkboxUser = document.getElementById('searchUser');
+            if (checkboxUser.checked) {
+                searchUser = true;
+            } else {
+                searchUser = false;
+            }
+
+            var checkboxComment = document.getElementById('searchComment');
+            if (checkboxComment.checked) {
+                searchComment = true;
+            } else {
+                searchComment = false;
+            }
+
+            sortVideoBy = $('input[name=sortVideoBy]:checked').val();
+            sortUserBy = $('input[name=sortUserBy]:checked').val();
+            sortCommentBy = $('input[name=sortCommentBy]:checked').val();
+            ascDesc = $('input[name=ascDesc]:checked').val();
+
+            $.ajax({
+                url: searchText + "/" + searchVideo + "/" + searchUser + "/" + searchComment + "/" +
+                sortVideoBy + "/" + sortUserBy + "/" + sortCommentBy + "/" + ascDesc,
+                dataType: 'json',
+                contentType: "application/json",
+                type: 'get',
+                success: function (response) {
+                    fillDiv(response);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        function fillDiv(data) {
+            var videosDiv = $('#videosDiv');
+            var usersDiv = $('#usersDiv');
+            var commentsDiv = $('#commentsDiv');
+
+            videosDiv.empty();
+            usersDiv.empty();
+            commentsDiv.empty();
+
+            var videosLength = data.videos.length;
+            var usersLength = data.users.length;
+            var CommnetsLength = data.comments.length;
+
+            if (videosLength > 0) {
+                for(var v in data.videos)
+                {
+                    videosDiv.append(
+                        '<div class="col-lg-3">' +
+                            '<div class="Video" style="text-align:center;">' +
+                                '<a href="http://localhost:55157/videos/' + data.videos[v].id+'" style="color:#00961a;font-weight: bold;">' +
+                                    '<img src="http://localhost:55157/uploads/' + data.videos[v].photoUrl+'" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">' +
+                                    '<div class="caption">' +
+                                        '<h3>' + data.videos[v].name+'</h3>' +
+                                    '</div>' +
+                                '</a>' +
+                                '<a href="http://localhost:55157/users/' + data.videos[v].user.id + '" style="color:#00961a;"><h3>' + data.videos[v].user.username+'</h3></a>' +
+                                '<h4 style="margin-bottom:1em; color:white;">' + data.videos[v].description + '<br>' + data.videos[v].numberOfViews + ' views<br>' + data.videos[v].creationDate+'</h4>' +
+                            '</div>'+
+                        '</div>'
+                    );
+                }
+            }
+            if (usersLength > 0) {
+
+                for (var u in data.users)
+                {
+                    usersDiv.append(
+                            '<div class="col-lg-3">' +
+                            '<div class="FollowersContainer" style="text-align:center; margin-top:2em;">' +
+                                '<a href="http://localhost:55157/users/' + data.users[u].id + '">' +
+                                '<img src="http://localhost:55157/uploads/' + data.users[u].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
+                                            '<div class="cufCaption">' +
+                                '<h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Username: ' + data.users[u].username + '</h3>' +
+                                            '</div>' +
+                                        '</a>' +
+                                '<h3 style="margin-top:1em; color:#00961a; margin-left:20px;">First name: ' + data.users[u].firstName + '</h3>' +
+                                '<h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Last name: ' + data.users[u].lastName + '</h3>' +
+                                '<h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Email: ' + data.users[u].email + '</h3>' +
+                            '</div>' +
+                        '</div>'
+                        );
+                }
+            }
+            if (CommnetsLength > 0) {
+
+                for (var c in data.comments)
+                {
+                    console.log(data.comments[c]);
+                    commentsDiv.append(
+                        '<div class="col-lg-3">' +
+                            '<div class="commentContainer">' +
+                                '<div class="caption" style="color:white;">' +
+                                    '<a href="http://localhost:55157/users/' + data.comments[c].user.id + '">' +
+                                    '<h3>' + data.comments[c].user.username + '</h3>' +
+                                    '</a><br>' +
+                                    '<h4>' + data.comments[c].description + '</h4>' +
+                                    '<h4>' + data.comments[c].numberOfLikes +' - ' + data.comments[c].numberOfDislikes + ' raiting</h4>' +
+                                    '<h4>The name of the video on which the comment is: ' +
+                                    '<a href="http://localhost:55157/videos/' + data.comments[c].video.id + '">' +
+                                    data.comments[c].video.name + 
+                                    '</a>' +
+                                    '</h4>' +
+                                    '<hr>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+                    );
+                }
+            }
+        }
+
+    </script>
+
+    <div class="container-fluid">
+        <nav class="navbar navbar-inverse" style="background:#333;">
+            <div class="container-fluid" id="containerNavbar">
+                <div class="navbar-header">
+                    <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right" id="navbarLogin"></ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid" style="text-align:center">
+        <div class="row" style="color:white; margin-top:3em;">
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Search by</h3>
+                    <input type="checkbox" name="search" value="Name" id="searchVideo" checked><a>search video</a><br />
+                    <input type="checkbox" name="search" value="Username" id="searchUser" checked><a>search user</a><br />
+                    <input type="checkbox" name="search" value="Description" id="searchComment" checked><a>search comment</a><br />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Sort videos by</h3>
+                    <input type="radio" name="sortVideoBy" value="Name" id="sortVideoBy" checked><a>Name</a><br />
+                    <input type="radio" name="sortVideoBy" value="Description" id="sortVideoBy"><a>Description</a><br />
+                    <input type="radio" name="sortVideoBy" value="User" id="sortVideoBy"><a>User</a><br />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Sort users by</h3>
+                    <input type="radio" name="sortUserBy" value="Username" id="sortUserBy" checked><a>Username</a><br />
+                    <input type="radio" name="sortUserBy" value="Firstname" id="sortUserBy"><a>First name</a><br />
+                    <input type="radio" name="sortUserBy" value="Lastname" id="sortUserBy"><a>Last name</a><br />
+                    <input type="radio" name="sortUserBy" value="Email" id="sortUserBy"><a>Email</a><br />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Sort comments by</h3>
+                    <input type="radio" name="sortCommentBy" value="Description" id="sortCommentBy" checked><a>Description</a><br />
+                    <input type="radio" name="sortCommentBy" value="User" id="sortCommentBy"><a>User</a><br />
+                    <input type="radio" name="sortCommentBy" value="Video" id="sortCommentBy"><a>Video</a><br />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Order by</h3>
+                    <input type="radio" name="ascDesc" value="asc"><a>Sort asc</a><br />
+                    <input type="radio" name="ascDesc" value="desc" checked><a>Sort desc</a><br />
+                </div>
+            </div>
+            <div class="col-lg-6" style="margin-top:2em;">
+                <div class="input-group">
+                    <input type="text" name="searchInput" id="searchInput" placeholder="Search" class="form-control">
+                    <div class="input-group-btn">
+                        <button onclick="searchAll()"><img id="search" src="~/uploads/search.png" style="margin-left:1em;width:3em; height:1.8em; margin-top:0.2em;"></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container-fluid" style="text-align:center;" id="videosContainer">
+        <h2 style="margin-top:5em; margin-bottom:2em; text-align:center; color:white;">Videos</h2>
+        <div class="row" id="videosDiv" style="text-align:center;">
+           @if (Model.Videos.Count() > 0)
+            {
+                @foreach (var video in Model.Videos)
+                {
+                    <div class="col-lg-3">
+                        <div class="Video" style="text-align:center;">
+                            <a href="http://localhost:55157/videos/@video.Id" style="color:#00961a;font-weight: bold;">
+                                <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                                <div class="caption">
+                                    <h3>@video.Name</h3>
+                                </div>
+                            </a>
+                            <a href="http://localhost:55157/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
+                            <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                        </div>
+                    </div>
+                }
+           }
+           else
+           {
+            <div class="col-lg-12">
+                <h2 style="color:white; margin-bottom:2em;">No result for videos</h2>
+            </div>
+           }
+        </div>
+    </div>
+
+    
+    <div class="container-fluid" style="text-align:center;" id="usersContainer">
+        <h2 style="margin-top:5em; margin-bottom:2em; text-align:center; color:white;">Users</h2>
+        <div class="row" id="usersDiv" style="text-align:center;">
+            @if (Model.Users.Count() > 0)
+            {
+                @foreach (var user in Model.Users)
+                {
+                    <div class="col-lg-3">
+                        <div class="FollowersContainer" style="text-align:center; margin-top:2em;">
+                            <a href="http://localhost:55157/users/@user.Id">
+                                <img src="~/uploads/@user.profilePictureUrl" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">
+                                <div class="cufCaption">
+                                    <h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Username: @user.Username</h3>
+                                </div>
+                            </a>
+                            <h3 style="margin-top:1em; color:#00961a; margin-left:20px;">First name: @user.FirstName</h3>
+                            <h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Last name: @user.LastName</h3>
+                            <h3 style="margin-top:1em; color:#00961a; margin-left:20px;">Email: @user.Email</h3>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <h2 style="color:white; margin-bottom:2em;">No result for users</h2>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="container-fluid" style="text-align:center;" id="commentsContainer">
+        <h2 style="margin-top:5em; margin-bottom:2em; text-align:center; color:white;">Comments</h2>
+        <div class="row" id="commentsDiv" style="text-align:center;">
+            @if (Model.Comments.Count() > 0)
+            {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="col-lg-3">
+                        <div class="commentContainer">
+                            <div class="caption" style="color:white;">
+                                <a href="http://localhost:55157/users/@comment">
+                                    <h3>@comment.User.Username</h3>
+                                </a><br>
+                                <h4>@comment.Description</h4>
+                                <h4>@comment.NumberOfLikes - @comment.NumberOfDislikes raiting</h4>
+                                <h4>The name of the video on which the comment is: 
+                                    <a href="http://localhost:55157/videos/@comment.Video.Id">
+                                        @comment.Video.Name
+                                    </a>
+                                </h4>
+                                <hr>      
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-lg-12">
+                    <h2 style="color:white; margin-bottom:2em;">No result for comments</h2>
+                </div>
+                    }
+        </div>
+    </div>
+
+    <footer style="height: 2em;
+                       background-color: #333;
+                       bottom: 0;
+                       left: 0;
+                       width: 100vw;
+                       position: fixed;">
+        <p style="color: white;
+                      padding: 0 30px;
+                      font-size: 20px;">
+            Copyright &#169 2018 Luka Bulatovic
+        </p>
+    </footer>
+</body>
+</html>

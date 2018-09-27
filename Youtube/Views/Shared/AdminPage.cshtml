@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin page</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
+
+    <script>
+
+        $(document).ready(function (e) {
+            $.get('http://localhost:55157/loggedInUser', function (data) {
+                if (data == null) {
+                   
+                }
+                else {
+                    var navbarHeader = $('.navbar-header');
+                    navbarHeader.append(
+                        '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                    );
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                    );
+                }
+            });
+
+            $.get('http://localhost:55157/users', function (data) {
+                if (data != null) {
+                    console.log(data);
+                    var userDiv = $('#userDiv');
+                    for (i = 0; i < data.length; i++) {
+                        console.log(data[i]);
+                        userDiv.append(
+                            '<div class="col-lg-3">' +
+                                '<div class="container" id="containerUser">' +
+                                    '<div class="container">' +
+                                        '<a href="http://localhost:55157/users/' + data[i].id + '">' +
+                                            '<img src="/uploads/' + data[i].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
+                                            '<div class="cufCaption">' +
+                                                '<h3 style="margin-left:20px;">' + data[i].username + '</h3>' +
+                                            '</div>' +
+                                        '</a>' +
+                                    '</div>' +
+                                    '<div class="container" id="' + data[i].username + '">' +
+                                        '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="deleteUser(' + data[i].id + ')">Delete</button>' +
+                                    '</div>'+
+                                    
+                                    '<div class="container" id="alignCenter" style="margin-bottom:1em; color:white;">' +
+                                        '<h3>First name: ' + data[i].firstName + '</h3>' +
+                                        '<h3>Last name: ' + data[i].lastName + '</h3>' +
+                                        '<h3>Email: ' + data[i].email + '</h3>' +
+                                        '<h3>Role: ' + data[i].role + '</h3>' +
+                                        '<h3 style="margin-bottom:1em;">Block: ' + data[i].blocked + '</h3><hr>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>'
+                        );
+                        var userButtonsDiv = $('#' + data[i].username);
+                        console.log(data[i].username + " nesto")
+                        console.log(userButtonsDiv)
+                        if (data[i].blocked == true) {
+                            console.log("blokiran");
+                            userButtonsDiv.append(
+                                '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="unblockUser(' + data[i].id + ')">Unblock</button>'
+                            );
+                        } else {
+                            console.log("nije blokiran");
+                            userButtonsDiv.append(
+                                '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="blockUser(' + data[i].id + ')">Block</button>'
+                            );
+                        }
+                        if (data[i].role != "Admin") {
+                            userButtonsDiv.append(
+                                '<button class="btn btn-primary" style="margin-top:1em;margin-right:1em;" id="btnPromote" onclick="promoteUser(' + data[i].id + ')">Promote</button>'
+                                );
+
+                        }
+                    }
+                }
+            });
+        });
+
+        function deleteUser(id) {
+            var r = confirm("Are u sure u want to delete this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'users/delete/' + id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+                        
+                        
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function promoteUser(id) {
+            var r = confirm("Are u sure u want to promote this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'users/promote/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+        function blockUser(id) {
+            var r = confirm("Are u sure u want to promote this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'users/block/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+        function unblockUser(id) {
+            var r = confirm("Are u sure u want to promote this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'users/unblock/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function searchUsers() {
+            var searchInput = $('#searchInput');
+            var searchText = searchInput.val().trim();
+            var sortBy = "";
+            var ascDesc = "";
+
+            sortBy = $('input[name=orderBy]:checked').val();
+            ascDesc = $('input[name=ascDesc]:checked').val();
+
+            $.ajax({
+                url: 'users/search',
+                dataType: 'json',
+                contentType: "application/json",
+                type: 'get',
+                data: {
+                    'searchText': searchText,
+                    'sortBy': sortBy,
+                    'ascDesc': ascDesc
+                },
+                success: function (response) {
+                    fillDiv(response);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        function fillDiv(data){
+            var userDiv = $('#userDiv');
+            userDiv.empty();
+            for (i = 0; i < data.length; i++) {
+                console.log(data[i]);
+                userDiv.append(
+                    '<div class="col-lg-3">' +
+                    '<div class="container" id="containerUser">' +
+                    '<div class="container">' +
+                    '<a href="http://localhost:55157/users/' + data[i].id + '">' +
+                    '<img src="/uploads/' + data[i].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
+                    '<div class="cufCaption">' +
+                    '<h3 style="margin-left:20px;">' + data[i].username + '</h3>' +
+                    '</div>' +
+                    '</a>' +
+                    '</div>' +
+                    '<div class="container" id="' + data[i].username + '">' +
+                    '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="deleteUser(' + data[i].id + ')">Delete</button>' +
+                    '</div>' +
+
+                    '<div class="container" id="alignCenter" style="margin-bottom:1em; color:white;">' +
+                    '<h3>First name: ' + data[i].firstName + '</h3>' +
+                    '<h3>Last name: ' + data[i].lastName + '</h3>' +
+                    '<h3>Email: ' + data[i].email + '</h3>' +
+                    '<h3>Role: ' + data[i].role + '</h3>' +
+                    '<h3 style="margin-bottom:1em;">Block: ' + data[i].blocked + '</h3><hr>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
+                );
+                var userButtonsDiv = $('#' + data[i].username);
+                console.log(data[i].username + " nesto")
+                console.log(userButtonsDiv)
+                if (data[i].blocked == true) {
+                    console.log("blokiran");
+                    userButtonsDiv.append(
+                        '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="unblockUser(' + data[i].id + ')">Unblock</button>'
+                    );
+                } else {
+                    console.log("nije blokiran");
+                    userButtonsDiv.append(
+                        '<button class="btn btn-danger" style="margin-top:1em;margin-right:1em;" id="btnBlock" onclick="blockUser(' + data[i].id + ')">Block</button>'
+                    );
+                }
+                if (data[i].role != "Admin") {
+                    userButtonsDiv.append(
+                        '<button class="btn btn-primary" style="margin-top:1em;margin-right:1em;" id="btnPromote" onclick="promoteUser(' + data[i].id + ')">Promote</button>'
+                    );
+
+                }
+            }
+        }
+
+    </script>
+</head>
+<body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+                 margin: 0;
+                 padding: 0;
+                 background-size: inherit;
+                 background-position: center;
+                 font-family: sans-serif;">
+
+
+
+    <div class="container-fluid">
+        <nav class="navbar navbar-inverse" style="background:#333;">
+            <div class="container-fluid" id="containerNavbar">
+                <div class="navbar-header">
+                    <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right" id="navbarLogin"></ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid" style="text-align:center">
+        <div class="row" style="color:white; margin-top:3em;">
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Sort by</h3>
+                    <input type="radio" name="orderBy" value="Username" id="orderBy" checked><a>Username</a><br />
+                    <input type="radio" name="orderBy" value="Firstname" id="orderBy"><a>First name</a><br />
+                    <input type="radio" name="orderBy" value="Lastname" id="orderBy"><a>Last name</a><br />
+                    <input type="radio" name="orderBy" value="Email" id="orderBy"><a>Email</a><br />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="search">
+                    <h3>Order by</h3>
+                    <input type="radio" name="ascDesc" value="asc"><a>Sort asc</a><br />
+                    <input type="radio" name="ascDesc" value="desc" checked><a>Sort desc</a><br />
+                </div>
+            </div>
+            <div class="col-lg-6" style="margin-top:2em;">
+                <div class="input-group">
+                    <input type="text" name="searchInput" id="searchInput" placeholder="Search" class="form-control">
+                    <div class="input-group-btn">
+                        <a onclick="searchUsers()"><img id="search" src="~/uploads/search.png" style="margin-left:1em;width:3em; height:1.8em; margin-top:0.2em;"></a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <h2 style="margin-top:5em; margin-bottom:2em; text-align:center; color:white;">All users</h2>
+    <div class="container-fluid">
+        <div class="row" id="userDiv">
+        </div>
+    </div>
+
+    <footer style="height: 2em;
+                       background-color: #333;
+                       bottom: 0;
+                       left: 0;
+                       width: 100vw;
+                       position: fixed;">
+        <p style="color: white;
+                      padding: 0 30px;
+                      font-size: 20px;">
+            Copyright &#169 2018 Luka Bulatovic
+        </p>
+    </footer>
+</body>
+</html>

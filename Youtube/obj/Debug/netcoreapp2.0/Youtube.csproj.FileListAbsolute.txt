@@ -1,0 +1,11 @@
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.csproj.CoreCompileInputs.cache
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.AssemblyInfoInputs.cache
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.AssemblyInfo.cs
+D:\fax\c#\Youtube\Youtube\bin\Debug\netcoreapp2.0\Youtube.deps.json
+D:\fax\c#\Youtube\Youtube\bin\Debug\netcoreapp2.0\Youtube.runtimeconfig.json
+D:\fax\c#\Youtube\Youtube\bin\Debug\netcoreapp2.0\Youtube.runtimeconfig.dev.json
+D:\fax\c#\Youtube\Youtube\bin\Debug\netcoreapp2.0\Youtube.dll
+D:\fax\c#\Youtube\Youtube\bin\Debug\netcoreapp2.0\Youtube.pdb
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.dll
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.pdb
+D:\fax\c#\Youtube\Youtube\obj\Debug\netcoreapp2.0\Youtube.csprojResolveAssemblyReference.cache

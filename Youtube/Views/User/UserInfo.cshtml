@@ -1,0 +1,35 @@
+﻿@model  Youtube.ViewModels.UsersViewModel
+
+<div class="container-fluid" id="glavniContainer">
+    <h2> All users</h2>
+    <div class="container-fluid" id="usersContainer">
+        <div class="row">
+            @foreach (var user in Model.Users)
+            {
+                <div class="col-lg-3">
+                    <div class="container" id="containerUser">
+                        <div class="container">
+                            <a href="#">
+                                <img src="~/uploads/@user.ProfilePictureUrl" class="avatar" style="width:150px; height:100px">
+                                <div class="cufCaption">
+                                    <h3 style="margin-left:20px;">@user.Username</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+                    <button id="btnPromote">Promote</button>
+                    <button id="btnBlock">Unblock</button>
+                    <button id="btnBlock">Delete</button>
+                    <div class="container" id="alignCenter">
+                        <h3>First name: @user.FirstName</h3>
+                        <h3>Last name: @user.LastName</h3>
+                        <h3>Email: @user.Email</h3>
+                        <h3>Role: @user.Role</h3>
+                        <h3 style="margin-bottom:1em;">Blocked: @user.Blocked</h3><hr>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

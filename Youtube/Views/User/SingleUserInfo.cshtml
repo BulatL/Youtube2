@@ -1,0 +1,36 @@
+﻿@using Youtube.ViewModels;
+@model  SingleUserDTO
+
+<div class="container-fluid" style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="container" id="KanalContainer">
+                <img src="~/uploads/@Model.profilePictureUrl" class="avatar" style="width:120px; height:120px;border-radius: 25px;">
+                <br /><h2 style="color:white;">@Model.Username</h2>
+            </div>
+        </div>
+
+        <div class="row-lg-4" id="KanalContainerDescription" style="float:right;">
+            <div class="container-fluid" style="float:right;" id="UserInfoDiv">
+                <div class="row-lg-2">
+                    <h3 style="color:white;">Information about @Model.Username channel</h3>
+                </div>
+                <div class="row-lg-2">
+                    <h3 style="color:white;">First name: @Model.FirstName</h3>
+                </div>
+                <div class="row-lg-2">
+                    <h3 style="color:white;">Last name: @Model.LastName</h3>
+                </div>
+                <div class="row-lg-2">
+                    <h3 style="color:white;">Email: @Model.Email</h3>
+                </div>
+                <div class="row-lg-2">
+                    <h3 style="color:white;">Registration date: @Model.RegistrationDate</h3>
+                </div>
+                <div class="row-lg-2">
+                    <h3 style="color:white;">Channel description: @Model.Description</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

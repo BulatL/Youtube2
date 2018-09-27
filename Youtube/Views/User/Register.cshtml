@@ -1,0 +1,72 @@
+﻿@using Youtube.ViewModels
+@model AddUserDTO
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Register</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
+    <script>
+        $("form").submit(function (e) {
+            e.preventDefault();
+        });
+    </script>
+</head>
+<body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+                 margin: 0;
+                 padding: 0;
+                 background-size: inherit;
+                 background-position: center;
+                 font-family: sans-serif;">
+    
+    <div class="container-fluid" style="margin-top:3em; text-align:center; color:white;">
+        <img src="~/uploads/defaultUserImage.png" style="width:180px; height:180px;" class="avatar">
+        <form method="post" enctype="multipart/form-data">
+            <div style="margin-top:1em;">
+                <label asp-for="Username"></label><br />
+                <input asp-for="Username" /><br />
+                <span asp-validation-for="Username" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="Password"></label><br />
+                <input type="password" asp-for="Password" /><br />
+                <span asp-validation-for="Password" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="FirstName"></label><br />
+                <input asp-for="FirstName" /><br />
+                <span asp-validation-for="FirstName" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="LastName"></label><br />
+                <input asp-for="LastName" /><br />
+                <span asp-validation-for="LastName" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="Email"></label><br />
+                <input asp-for="Email" /><br />
+                <span asp-validation-for="Email" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="Description"></label><br />
+                <input asp-for="Description" /><br />
+                <span asp-validation-for="Description" style="color:red;"></span>
+            </div>
+            <div style="margin-top:1em;">
+                <label asp-for="Image"></label><br />
+                <input type="file" asp-for="Image" /><br />
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-bottom:2em;">Save</button>
+        </form>
+        <a href="http://localhost:55157/home" class="btn btn-danger" style="margin-bottom:2em;">Cancel</a>
+</div>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <script src="~/node_modules/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+</body>
+</html>

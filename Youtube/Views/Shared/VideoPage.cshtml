@@ -1,0 +1,541 @@
+﻿@using Youtube.ViewModels
+
+@model SingleVideoDTO
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.Name</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ"/>
+</head>
+<body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+                 margin: 0;
+                 padding: 0;
+                 background-size: inherit;
+                 background-position: center;
+                 font-family: sans-serif;">
+
+
+    <script>
+        var globalData;
+        var oldDescription;
+        var globalOwnerId;
+        var globalVideoId;
+        var globalVideoBlocked;
+
+        $(document).ready(function (e) {
+            $.get('http://localhost:55157/loggedInUser', function (data) {
+                globalData = data;
+                if (data == null) {
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
+                        '<li><a href="http://localhost:55157/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
+                    );
+                    $('.deleteCommentButton').hide();
+                    $('.editCommentButton').hide();
+                }
+                else {
+                    if (data.role == 0) {
+                        var navbarHeader = $('.navbar-header');
+                        navbarHeader.append(
+                            '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                        );
+                    }
+                    else {
+                        if (data.id != globalOwnerId) {
+                            $('.deleteCommentButton').hide();
+                            $('.editCommentButton').hide();
+                        }
+                    }
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                    );
+
+                    videoDivButtons()
+                }
+            });
+            commentsDivButtons();
+
+        });
+
+        function videoDivButtons() {
+            if (globalData.role == 0 || globalData.id == globalOwnerId) {
+                var editVideoButtonsDiv = $('#editVideoButtonsDiv');
+                editVideoButtonsDiv.append(
+                    '<button class="btn btn-success" id="editInfo" onclick="editInfoVideo(' + globalVideoId + ')">Edit information</button>'
+                );
+                var videoButtonsDiv = $('#videoButtonsDiv');
+                videoButtonsDiv.append(
+                    '<button id="btnCancel2" class="btn btn-danger" style="margin-right:1em;" onclick="alertDeleteVideo(' + globalVideoId + ')">Delete</button>'
+                );
+                if (globalVideoBlocked === true) {
+                    videoButtonsDiv.append(
+                        '<button id="btnCancel2" class="btn btn-danger" style="margin-right:1em;" onclick="unBlockVideo(' + globalVideoId + ')">Unblock</button>'
+                    );
+                }
+                else {
+                    videoButtonsDiv.append(
+                        '<button id="btnCancel2" class="btn btn-danger" style="margin-right:1em;" onclick="blockVideo(' + globalVideoId + ')">Block</button>'
+                    );
+                }
+            }
+        }
+
+        function getIds(ownerId, videoId, blocked) {
+
+            globalOwnerId = ownerId;
+            globalVideoId = videoId;
+            globalVideoBlocked = blocked;
+        }
+
+        function commentsDivButtons(comment) {
+            if (globalData != null && globalData.blocked == false) {
+                if (globalData.id == comment.user.id || globalData.role == 0) {
+                    var komenatButtonsDiv = $('#komentarButtonsDiv' + comment.id);
+                    komenatButtonsDiv.empty();
+                    komenatButtonsDiv.append(
+                        '<button name="post"  id="editComment" onclick="editKomentar(' + comment.id + ')">Edit</button>' +
+                        '<button id="deleteVideo" onclick="alertDeleteKomentar(' + comment.id + ')">Delete</button>'
+                    );
+                }
+            }
+        }
+
+        function disableCommentsButtons(ownerId, commnetId) {
+
+            if (globalData == null) {
+                var commentDiv = $("#" + commnetId);
+                commentDiv.empty();
+                return;
+
+            } else {
+                if (globalData.blocked == true) {
+                    var commentDiv = $("#" + commnetId);
+                    commentDiv.empty();
+                    return;
+                }
+                if (globalData.id != ownerId || globalData.role == 1) {
+                    var commentDiv = $("#" + commnetId);
+                    commentDiv.empty();
+                    return;
+                }
+
+            }
+
+        }
+
+        function searchAll() {
+            var searchInput = $('#searchInput');
+            var searchText = searchInput.val().trim();
+
+            var url = 'http://localhost:55157/search/' + searchText;
+            window.location.href = url;
+        };
+
+        function editInfoVideo(id) {
+
+            window.location = 'http://localhost:55157/videos/edit/' + id;
+        }
+
+        function alertDeleteVideo(id) {
+
+            var r = confirm("Are u sure u want to delete this video?");
+            if (r == true) {
+                $.ajax({
+                    url: '/videos/delete/' + id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success: function (response) {
+                        alert(response)
+                        window.location.href = "http://localhost:55157/home";
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+        function blockVideo(id) {
+
+            var r = confirm("Are u sure u want to block this video?");
+            if (r == true) {
+                $.ajax({
+                    url: '/videos/block/' + id,
+                    type: 'Patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response);
+                        if (response == "Success") {
+                            window.location.href = window.location.href;
+                        }
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function unBlockVideo(id) {
+
+            var r = confirm("Are u sure u want to block this video?");
+            if (r == true) {
+                $.ajax({
+                    url: '/videos/unblock/' + id,
+                    type: 'Patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response);
+                        if (response == "Success") {
+                            location.reload();
+                        }
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function likeVideo(id) {
+
+            $.ajax({
+                url: '/videos/like/' + id,
+                type: 'Post',
+                dataType: 'json',
+                success: function (response) {
+                    alert(response);
+                    if (response == "Success") {
+                        location.reload();
+                    }
+                },
+                error: function (response) {
+                    alert("Something wnet wrong");
+                }
+            });
+        }
+
+        function dislikeVideo(id) {
+
+            $.ajax({
+                url: '/videos/dislike/' + id,
+                type: 'Post',
+                dataType: 'json',
+                success: function (response) {
+                    alert(response);
+                    if (response == "Success") {
+                        location.reload();
+                    }
+                },
+                error: function (response) {
+                    alert("Something wnet wrong");
+                }
+            });
+        }
+
+        function likeComment(id) {
+
+            $.ajax({
+                url: '/comments/like/' + id,
+                type: 'Post',
+                dataType: 'json',
+                success: function (response) {
+                    alert(response);
+                    if (response == "Success") {
+                        location.reload();
+                    }
+
+                },
+                error: function (response) {
+                    alert("Something wnet wrong");
+                }
+            });
+        }
+
+        function dislikeComment(id) {
+
+            $.ajax({
+                url: '/comments/dislike/' + id,
+                type: 'Post',
+                dataType: 'json',
+                success: function (response) {
+                    alert(response);
+                    if (response == "Success") {
+                        location.reload();
+                    }
+
+                },
+                error: function (response) {
+                    alert("Something wnet wrong");
+                }
+            });
+        }
+
+        function postComment(id) {
+            if (globalData != null) {
+                if (globalData.blocked == false) {
+                    var description = $('#komentarInput').val().trim();
+                    if (description == "") {
+                        alert("Comment may not be empty");
+                        return;
+                    }
+                    $.ajax({
+                        url: "http://localhost:55157/videos/postcomment",
+                        type: 'Post',
+                        dataType: 'json',
+                        data: {
+                            'description': description,
+                            'id': id
+                        },
+                        success: function (response) {
+                            alert(response)
+                            location.reload();
+                        },
+                        error: function (response) {
+                            alert(response);
+                        }
+                    });
+                }
+                else {
+                    alert("Your channel is blocked");
+                }
+            }
+            else {
+                var r = confirm("You need to login first \n  Do you want to login?");
+                if (r == true) {
+                    window.location.href = "http://localhost:55157/login";
+                }
+            }
+        }
+
+        function alertDeleteKomentar(id) {
+
+            var r = confirm("Are u sure u want to delete this comment?");
+            if (r == true) {
+                $.ajax({
+                    url: 'http://localhost:55157/comments/delete/' + id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success: function (response) {
+                        alert(response)
+                        location.reload();
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+        function editComment(commentId, commentDescription) {
+            oldDescription = commentDescription;
+            var commentDesciptionInput = document.getElementById(commentId + commentDescription);
+            commentDesciptionInput.readOnly = false;
+            commentDesciptionInput.focus();
+            var komentarButtonsDiv = $('#' + commentId);
+            komentarButtonsDiv.empty();
+            komentarButtonsDiv.append(
+                '<button class="btn btn-primary" id="editComment" onclick="saveEditComment(' + commentId + ')">Save</button>' +
+                '<button id="deleteVideo" class="btn btn-danger" onclick="cancelEditComment(' + commentId + ')">Cancel</button>'
+            );
+
+        }
+
+        function saveEditComment(id) {
+            if (globalData != null) {
+                var description = document.getElementById(id + oldDescription).value;
+                $.ajax({
+                    url: 'http://localhost:55157/comments/edit/' + id,
+                    type: 'Patch',
+                    dataType: 'json',
+                    data: {
+                        'id': id,
+                        'description': description
+                    },
+                    success: function (response) {
+                        if (response == "Success") {
+                            alert("Success");
+                            document.getElementById(id + oldDescription).readOnly = true;
+                            var komenatButtonsDiv = $('#komentarButtonsDiv' + id);
+                            komenatButtonsDiv.empty();
+                            komenatButtonsDiv.append(
+                                '<button class="btn btn-success" name="post"  id="editComment" onclick="editComment(' + id + ')">Edit</button>' +
+                                '<button class="btn btn-danger" id="deleteVideo" onclick="alertDeleteComment(' + id + ')">Delete</button>'
+                            );
+                            location.reload();
+                        }
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            } else {
+                alert("You need to login first");
+                cancelEditComment(id);
+            }
+        }
+
+        function cancelEditComment(id) {
+            var commentDesciptionInput = document.getElementById(id + oldDescription);
+            commentDesciptionInput.readOnly = true;
+            var commentButtonsDiv = $('#' + id);
+            var c = id + "," + "'" + oldDescription + "'";
+            commentButtonsDiv.empty();
+            commentButtonsDiv.append(
+                '<button class="btn btn-success" name="post" id="editComment" onclick="editComment(' + id + ')">Edit</button>' +
+                '<button class="btn btn-danger" id="deleteVideo" onclick="alertDeleteComment(' + id + ')">Delete</button>'
+            );
+            commentDesciptionInput.value = oldDescription;
+        }
+    </script>
+
+
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <nav class="navbar navbar-inverse" style="background:#333;">
+                <div class="container-fluid" id="containerNavbar">
+                    <div class="navbar-header">
+                        <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                    </div>
+                    <div class="nav navbar-nav navbar-right" style="margin-top:10px;">
+                        <div class="input-group">
+                            <input type="text" name="searchInput" placeholder="Search" class="form-control" id="searchInput">
+                            <div class="input-group-btn">
+                                <button onclick="searchAll()"><img id="search" src="~/uploads/search.png" style="margin-left:1em;width:3em; height:1.8em; margin-top:0.2em;"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right" id="navbarLogin"></ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="container-fluid" id="VideoContainer">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="container">
+                        <iframe id="videoFrame" width="950" height="550" src="@Model.VideoUrl" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen style="margin-top:2em;margin-bottom:2em;"></iframe>
+                        <div class="caption">
+                            <input class="videoInformationInput" style="border:none; font-size:2.5em; background:none; color:white; margin-left:0.5em;" id="videoNaziv" type="text" name="videoNaziv" value="@Model.Name" readonly>
+                        </div>
+                        <div class="container">
+                            
+                            <input class="videoInformationInput" style="border:none; font-size:2.5em; background:none; color:white;" id="videoBrPregleda" type="text" name="videoNaziv" value="@Model.NumberOfViews views" readonly>
+                            <div class="floatRight" style="float:right;">
+                                <a onclick="dislikeVideo(@Model.Id)"><img id="btnUnlike" src="~/uploads/red-thumbs-down-md.png" width="50px" height="50px"></a>
+                                @if (Model.AllowRaiting == true)
+                                {
+                                    <input class="videoInformationInput" style="border:none; font-size:1.5em; background:none; color:white; width:3em; margin-left:1em;" id="videoBrLajkova" type="text" name="videoNaziv" value="@Model.NumberOfDislikes   @Model.NumberOfLikes" readonly>
+                                }
+                                <a onclick="likeVideo(@Model.Id)"><img id="btnLike" src="~/uploads/green-thumbs-up-md.png" width="50px" height="50px"></a>
+                            </div>
+                        </div>
+                        <div class="container" id="videoButtonsDiv">
+                            @if (Model.Blocked == true)
+                            {
+                                <script>getIds(@Model.Owner.Id,@Model.Id, true)</script>
+                            }
+                            else
+                            {
+                                <script>getIds(@Model.Owner.Id,@Model.Id, false)</script>
+
+                            }
+                        </div>
+                        <div class="container" id="videoInformationContainer">
+                            <div class="col-lg-8" style="margin-left:-1.7em;">
+                                <div class="container">
+                                    <p class="viewCV">
+                                        <a href="http://localhost:55157/users/@Model.Owner.Id" style="color:#00961a;"><h3 style="font-size:2em;">@Model.Owner.Username</h3></a>
+                                        <textarea rows="4" cols="30" class="videoInformationInput" style="border:outset; background:none; color:white; font-size:1.5em;" id="videoOpis" readonly>@Model.Description</textarea><br />
+                                        <input class="videoInformationInput" style="border:none; background:none; color:white; font-size:1.5em;" id="videoNaziv" type="text" name="videoDate" value="Posted @Model.CreationDate" readonly>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4" style="margin-bottom:2em; margin-left:-1.5em;">
+                                <div class="container" id="editVideoButtonsDiv">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="container-fluid" id="komentariContainer">
+                                <div class="col-lg-10">
+                                    <input type="text" style="border:outset; background:none; color:white; font-size:1.5em; width:40em; margin-bottom:1em;" placeholder="enter comment here" id="komentarInput">
+                                </div>
+                                <div class="col-lg-2" style="margin-bottom:2em;">
+                                    <div class="container-fluid" id="videoPostButtonsDiv">
+                                        <button id="btnPost" style="margin-bottom:0.5em; width:5em;" class="btn btn-success" onclick="postComment(@Model.Id)">Post</button>
+                                        <button id="btnCancel" style="margin-bottom:0.5em; width:5em;" class="btn btn-danger" onclick="cancelEditComment(@Model.Id)">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-lg-8" id="glavniKomentarDiv" style="margin-bottom:2em;">
+                        @if (Model.AllowComments == true)
+                        {
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <div class="container-fluid" style="margin-bottom:1em;">
+                                    <div class="komentarContainer" style="border:outset">
+                                        <div class="col-log-3" id="komentarDiv'+@comment.Id+'">
+                                            <a href="http://localhost:55157/users/@comment.User.Id" style="font-size: 2em">
+                                                <img src="~/uploads/@comment.User.profilePictureUrl" class="avatar" style="margin:0.5em ;width:80px; height:80px;border-radius: 25px;">
+                                                @comment.User.Username
+                                            </a><br />
+                                            <textarea id="@comment.Id@comment.Description" rows="4" cols="30" style="margin-left:0.5em;border:outset; background:none; color:white; font-size:1.5em; width:20em; margin-bottom:1em;" id="komentarOpis'+@comment.Id+'" readonly>@comment.Description</textarea><br />
+                                            <input class="videoInformationInput" style="margin-left:0.5em;border:none; background:none; color:white; font-size:1.5em;" id="komentarDatum" type="text" value="Posted @comment.CreationDate" readonly><br />
+                                            <div class="containerButtonsKomentar">
+                                                <a onclick="dislikeComment(@comment.Id)" class="AnchorLikeComment"><img id="btnUnlike" src="~/uploads/red-thumbs-down-md.png" style="width:50px; height:50px;"></a>
+                                                <input style="border:none; font-size:1.5em; background:none; color:white; width:3em; margin-left:1em;" id="videoBrLajkova" type="text" name="videoNaziv" value="@comment.NumberOfDislikes   @comment.NumberOfLikes" readonly>
+                                                <a onclick="likeComment(@comment.Id)" class="AnchorDislikeComment"><img id="btnLike" src="~/uploads/green-thumbs-up-md.png" style="width:50px; height:50px;"></a>
+                                            </div>
+                                        </div>
+                                        <div class="col-log-2" id="@comment.Id" style="float: right; margin-top: -4em; margin-left: -1em;">
+                                            <button class="editCommentButton" style="background-color:#28a745; border-color:#28a745; color:#fff;" name="post" id="editComment" onclick="editComment(@comment.Id, '@comment.Description')">Edit</button>
+                                            <button class="deleteCommentButton" style="background-color:#dc3545; border-color:#dc3545; color:#fff;" id="deleteVideo" onclick="alertDeleteComment(@comment.Id)">Delete</button>
+                                            <script>disableCommentsButtons(@comment.User.Id);</script>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <h2 style="color:white; margin-bottom:2em;">@Model.Owner.Username doesn't allow comments</h2>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer style="height: 2em;
+                       background-color: #333;
+                       bottom: 0;
+                       left: 0;
+                       width: 100vw;
+                       position: fixed;">
+        <p style="color: white;
+                      padding: 0 30px;
+                      font-size: 20px;">
+            Copyright &#169 2018 Luka Bulatovic
+        </p>
+    </footer>
+</body>
+</html>

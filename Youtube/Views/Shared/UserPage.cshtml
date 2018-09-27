@@ -1,0 +1,440 @@
+﻿@using Youtube.ViewModels;
+@model  SingleUserDTO
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.Username channel</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
+
+    <script>
+        var loggedInUser;
+        var globalModelRole;
+        var globalModelId;
+        var globalModelBlocked;
+        var globalFollowUnfollow;
+
+        $(document).ready(function (e) {
+            $.get('http://localhost:55157/loggedInUser', function (data) {
+                loggedInUser = data;
+                if (data == null) {
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
+                        '<li><a href="http://localhost:55157/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
+                    );
+                }
+                else {
+                    var navbarHeader = $('.navbar-header');
+                    navbarHeader.append(
+                        '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                    );
+                    var navbarLogin = $('#navbarLogin');
+                    navbarLogin.append(
+                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                    );
+
+                    var userButtons = $('#userButtons');
+                    userButtons.empty();
+
+                    if (loggedInUser.role == 0 || loggedInUser.id == globalModelId) {
+                        userButtons.append(
+                            '<a class="btn btn-success" style="width:9em;margin-right:0.5em; height:2em; margin-bottom:0.5em; font-weight:bold;" href="http://localhost:55157/users/edit/' + globalModelId+'"">Edit Profile</a>' +
+                            '<a class="btn btn-danger" style="width:9em; height:2em;margin-right:0.5em; margin-bottom:0.5em; font-weight:bold;" onclick="deleteUser(' + globalModelId + ')">Delete</a>'
+                        );
+                        var userInfoDiv = $('#UserInfoDiv');
+                        userInfoDiv.append(
+                            '<div class="row-lg-2">' +
+                            '<h3 style="color:white;">Type of user: ' + globalModelRole + '</h3>' +
+                            '</div> ' +
+                            '<div class="row-lg-2" > ' +
+                            '<h3 style= "color:white;"> Blocked: ' + globalModelBlocked + '</h3> ' +
+                            '</div>'
+                        );
+                    } console.log(loggedInUser);
+                    if (loggedInUser.role == 0) {
+                        console.log(globalModelRole);
+                        if (globalModelRole == "Admin") {
+                            console.log("admin je");
+                            userButtons.append(
+                                '<button type="submit" class="btn btn-primary" style="width:9em; margin-right:0.5em; height:2em; margin-bottom:0.5em; font-weight:bold;" onclick="promoteUser(' + globalModelId + ')">Promote</button>'
+                            );
+                        }
+
+                    }
+                    if (globalModelBlocked == "True") {
+                        console.log("blocked je true");
+                        userButtons.append(
+                            '<a class="btn btn-danger" style="width:9em; height:2em; margin-bottom:0.5em; font-weight:bold;" onclick="unblockUser(' + globalModelId + ')">Unblock</a>'
+                        );
+
+                    }
+                    if (globalModelBlocked == "False") {
+                        console.log("blocked je false");
+                        userButtons.append(
+                            '<button class="btn btn-danger" style="width:9em; height:2em; margin-bottom:0.5em; font-weight:bold;" onclick="blockUser(' + globalModelId + ')">Block</button>'
+                        );
+                    }
+                    if (loggedInUser.id == globalModelId && globalModelBlocked == "False") {
+                        var addVideoDiv = $('.addVideoDiv');
+                        addVideoDiv.append(
+                            ' <a href="http://localhost:55157/videos/add" class="btn btn-primary" style="width:9em; height:2em; margin-bottom:0.5em; font-weight: bold;">Add video</a>'
+                        );
+                    }
+                    if (loggedInUser.id != globalModelId) {
+                        var userButtons = $('#userButtons');
+                        if (globalFollowUnfollow == "follow") {
+                            userButtons.append(
+                                '<button onclick="unFollow(' + globalModelId + ');" class="btn btn-danger" style="width:9em; height:2em; margin-right:0.5em; margin-bottom:0.5em; font-weight: bold;">Unfollow</button>'
+                            );
+                        } else if (globalFollowUnfollow == "nofollow") {
+
+                            userButtons.append(
+                                '<button onclick="follow(' + globalModelId + ');" class="btn btn-primary" style="width:9em; height:2em; margin-right:0.5em; margin-bottom:0.5em; font-weight: bold;">Follow</button>'
+                            );
+                        }
+                    }
+                }
+            });
+        });
+
+        function promoteUser(id) {
+            var r = confirm("Are u sure u want to promote this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'promote/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function blockUser(id) {
+            var r = confirm("Are u sure u want to block this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'block/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function unblockUser(id) {
+            var r = confirm("Are u sure u want to unblock this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'unblock/' + id,
+                    type: 'patch',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response)
+                        if (response == "Success") {
+                            location.reload();
+                        }
+
+
+                    },
+                    error: function (response) {
+                        alert("Something went wrong");
+                    }
+                });
+            }
+        }
+
+        function deleteUser(id) {
+            var r = confirm("Are u sure u want to delete this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'delete/' + id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success: function (response) {
+                        alert(response)
+                        window.location.href = "http://localhost:55157/home";
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+        function follow(id) {
+            var r = confirm("Are u sure u want to follow this user");
+            if (r == true) {
+                $.ajax({
+                    url: 'follow/' + id,
+                    type: 'Post',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "Success") {
+                            alert(response);
+                            location.reload();
+                        }
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+        function unFollow(id) {
+            var r = confirm("Are u sure u want to unfollow this user");
+            if (r == true) {
+                $.ajax({
+                    url: '/users/unfollow/' + id,
+                    type: 'Delete',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "Success") {
+                            alert(response);
+                            location.reload();
+                        }
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        }
+
+        function existFollow(id) {
+                $.ajax({
+                    url: '/users/existfollow/' +id,
+                    type: 'Get',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response == "Follow") {
+                            globalFollowUnfollow = "follow";
+
+                        } if (response == "No follow") {
+                            globalFollowUnfollow ="nofollow"
+                        }
+                    },
+                    error: function (response) {
+                    }
+                });
+        }
+
+        function fillUserDiv(user) {
+            var splitovanUser = user.split(",");
+            var role = splitovanUser[0];
+            var blocked = splitovanUser[1];
+            var id = splitovanUser[2];
+            globalModelBlocked = blocked;
+            globalModelRole = role;
+            globalModelId = id;
+        }
+
+        function searchAll() {
+            var searchInput = $('#searchInput');
+            var searchText = searchInput.val().trim();
+
+            var url = 'http://localhost:55157/search/' + searchText;
+            window.location.href = url;
+        };
+
+    </script>
+</head>
+<body style="background-image:url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTptDddyBZG4i4cycd6ZIBP2wT8PQKhihUqenZF7GpzlvTZuPghGQ);
+                 margin: 0;
+                 padding: 0;
+                 background-size: inherit;
+                 background-position: center;
+                 font-family: sans-serif;">
+    <div class="container-fluid">
+        <nav class="navbar navbar-inverse" style="background:#333;">
+            <div class="container-fluid" id="containerNavbar">
+                <div class="navbar-header">
+                    <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                </div>
+                <div class="nav navbar-nav navbar-right" style="margin-top:10px;">
+                    <div class="input-group">
+                        <input type="text" name="searchInput" placeholder="Search" class="form-control" id="txtPretraga">
+                        <div class="input-group-btn">
+                            <a onclick="searchAll()"><img id="search" src="~/uploads/search.png" style="margin-left:1em;width:3em; height:1.8em; margin-top:0.2em;"></a>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav navbar-nav navbar-right" id="navbarLogin"></ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid" id="glavniContainer" style="margin-top:2em;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="container" id="KanalContainer">
+                        <img src="~/uploads/@Model.profilePictureUrl" class="avatar" style="width:120px; height:120px;border-radius: 25px;">
+                        <br /><h2 style="color:white;">@Model.Username</h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <div id="userButtons">
+
+                            <script>
+                                fillUserDiv('@Model.Role'+','+'@Model.Blocked'+','+'@Model.Id');
+                                existFollow(@Model.Id);
+                            </script>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row-lg-4" id="KanalContainerDescription" style="float:right;">
+                    <div class="container-fluid" style="float:right;" id="UserInfoDiv">
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">Information about @Model.Username channel</h3>
+                        </div>
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">First name: @Model.FirstName</h3>
+                        </div>
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">Last name: @Model.LastName</h3>
+                        </div>
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">Email: @Model.Email</h3>
+                        </div>
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">Registration date: @Model.RegistrationDate</h3>
+                        </div>
+                        <div class="row-lg-2">
+                            <h3 style="color:white;">Channel description: @Model.Description</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top:5em; text-align:center; color:white;">User videos</h2>
+        <div class="container-fluid" id="MyVideoContainer">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="addVideoDiv" style="float:right;">
+                        
+                    </div>
+                </div>
+                @foreach (var video in Model.UsersVideos)
+                {
+                    <div class="col-lg-3">
+                        <div class="Video" style="text-align:center;">
+                            <a asp-controller="Video" asp-action="GetVideoById" asp-rout-id="@video.Id" style="color:#00961a;font-weight: bold;">
+                                <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                                <div class="caption">
+                                    <h3>@video.Name</h3>
+                                </div>
+                            </a>
+                            <a href="http://localhost:55157/users/@Model.Id" style="color:#00961a;"><h3>@Model.Username</h3></a>
+                            <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <h2 style="margin-top:5em; text-align:center; color:white;">Liked videos</h2>
+        <div class="container-fluid" id="likedVideosContainer">
+            <div class="row">
+                @foreach (var video in Model.LikedVideos)
+                {
+                    <div class="col-lg-3">
+                        <div class="Video" style="text-align:center; margin-top:2em;">
+                            <a asp-controller="Video" asp-action="GetVideoById" asp-rout-id="@video.Id" style="color:#00961a;font-weight: bold;">
+                                <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                                <div class="caption">
+                                    <h3>@video.Name</h3>
+                                </div>
+                            </a>
+                            <a href="http://localhost:55157/users/@video.Owner.Id" style="color:#00961a;"><h3>@video.Owner.Username</h3></a>
+                            <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <h2 style="margin-top:5em; text-align:center; color:white;">Followers</h2>
+        <div class="container-fluid">
+            <div class="row">
+                @foreach (var user in Model.Followers)
+                {
+                    <div class="col-lg-3">
+                        <div class="FollowersContainer" style="text-align:center; margin-top:2em;">
+                            <a href="http://localhost:55157/users/@user.Id">
+                                <img src="~/uploads/@user.profilePictureUrl" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">
+                                <div class="cufCaption">
+                                   <h3 style="margin-bottom:1em; color:#00961a; margin-left:20px;">@user.Username</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <h2 style="margin-top:5em; text-align:center; color:white;">Following</h2>
+        <div class="container-fluid" style="margin-bottom:3em;">
+            <div class="row">
+                @foreach (var user in Model.Following)
+                {
+                    <div class="col-lg-3">
+                        <div class="FollowersContainer" style="text-align:center; margin-top:2em;">
+                            <a href="http://localhost:55157/users/@user.Id">
+                                <img src="~/uploads/@user.profilePictureUrl" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">
+                                <div class="cufCaption">
+                                    <h3 style="margin-bottom:1em; color:#00961a; margin-left:20px;">@user.Username</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <footer style="height: 2em;
+                       background-color: #333;
+                       bottom: 0;
+                       left: 0;
+                       width: 100vw;
+                       position: fixed;">
+        <p style="color: white;
+                      padding: 0 30px;
+                      font-size: 20px;">
+            Copyright &#169 2018 Luka Bulatovic
+        </p>
+    </footer>
+    
+</body>
+</html>
