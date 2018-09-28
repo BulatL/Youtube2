@@ -13,23 +13,23 @@
 
         <script>
             $(document).ready(function (e) {
-                $.get('http://localhost:55157/loggedInUser', function (data) {
+                $.get('loggedInUser', function (data) {
                     if (data == null) {
                         var navbarLogin = $('#navbarLogin');
                         navbarLogin.append(
-                            '<li><a href="http://localhost:55157/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
-                            '<li><a href="http://localhost:55157/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
+                            '<li><a href="http://localhost:55157/Youtube/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
+                            '<li><a href="http://localhost:55157/Youtube/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
                         );
                     }
                     else{
                         var navbarHeader = $('.navbar-header');
                         navbarHeader.append(
-                            '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                            '<a href="http://localhost:55157/Youtube/admin" class="navbar-brand" style="color:white;">Admin page</a>'
                         );
                         var navbarLogin = $('#navbarLogin');
                         navbarLogin.append(
-                            '<li><a href="http://localhost:55157/users/'+data.id+'" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>'+
-                            '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                            '<li><a href="http://localhost:55157/Youtube/users/'+data.id+'" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>'+
+                            '<li><a href="http://localhost:55157/Youtube/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
                         );
                     }
                 });
@@ -39,7 +39,7 @@
                 var searchInput = $('#searchInput');
                 var searchText = searchInput.val().trim();
 
-                var url = 'http://localhost:55157/search/' + searchText;
+                var url = 'search/' + searchText;
                 window.location.href = url;
             };
         </script>
@@ -57,7 +57,7 @@
                 <nav class="navbar navbar-inverse" style="background:#333;">
                     <div class="container-fluid" id="containerNavbar">
                         <div class="navbar-header">
-                            <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                            <a href="http://localhost:55157/Youtube/Home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
                         </div>
                         <div class="nav navbar-nav navbar-right" style="margin-top:10px;">
                             <div class="input-group">
@@ -82,13 +82,13 @@
                     {
                         <div class="col-lg-3">
                             <div class="Video" style="text-align:center;">
-                                <a href="http://localhost:55157/videos/@video.Id" style="color:#00961a;font-weight: bold;">
+                                <a href="http://localhost:55157/Youtube/videos/@video.Id" style="color:#00961a;font-weight: bold;">
                                     <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
                                     <div class="caption">
                                         <h3>@video.Name</h3>
                                     </div>
                                 </a>
-                                <a href="http://localhost:55157/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
+                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
                                 <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
                             </div>
                         </div>
@@ -104,13 +104,13 @@
                     {
                         <div class="col-lg-3">
                             <div class="Video" style="text-align:center;">
-                                <a href="http://localhost:55157/videos/@video.Id" asp-rout-id="@video.Id" style="color:#00961a;font-weight: bold;">
+                                <a href="http://localhost:55157/Youtube/videos/@video.Id" asp-rout-id="@video.Id" style="color:#00961a;font-weight: bold;">
                                     <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
                                     <div class="caption">
                                         <h3>@video.Name</h3>
                                     </div>
                                 </a>
-                                <a href="http://localhost:55157/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
+                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
                                 <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
                             </div>
                         </div>

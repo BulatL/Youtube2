@@ -21,24 +21,24 @@
         var globalFollowUnfollow;
 
         $(document).ready(function (e) {
-            $.get('http://localhost:55157/loggedInUser', function (data) {
+            $.get('http://localhost:55157/Youtube/loggedInUser', function (data) {
                 loggedInUser = data;
                 if (data == null) {
                     var navbarLogin = $('#navbarLogin');
                     navbarLogin.append(
-                        '<li><a href="http://localhost:55157/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
-                        '<li><a href="http://localhost:55157/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
+                        '<li><a href="http://localhost:55157/Youtube/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
+                        '<li><a href="http://localhost:55157/Youtube/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
                     );
                 }
                 else {
                     var navbarHeader = $('.navbar-header');
                     navbarHeader.append(
-                        '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                        '<a href="http://localhost:55157/Youtube/admin" class="navbar-brand" style="color:white;">Admin page</a>'
                     );
                     var navbarLogin = $('#navbarLogin');
                     navbarLogin.append(
-                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
-                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                        '<li><a href="http://localhost:55157/Youtube/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/Youtube/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
                     );
 
                     var userButtons = $('#userButtons');
@@ -85,7 +85,7 @@
                     if (loggedInUser.id == globalModelId && globalModelBlocked == "False") {
                         var addVideoDiv = $('.addVideoDiv');
                         addVideoDiv.append(
-                            ' <a href="http://localhost:55157/videos/add" class="btn btn-primary" style="width:9em; height:2em; margin-bottom:0.5em; font-weight: bold;">Add video</a>'
+                            ' <a href="http://localhost:55157/Youtube/videos/add" class="btn btn-primary" style="width:9em; height:2em; margin-bottom:0.5em; font-weight: bold;">Add video</a>'
                         );
                     }
                     if (loggedInUser.id != globalModelId) {
@@ -181,7 +181,7 @@
                     contentType: "application/json",
                     success: function (response) {
                         alert(response)
-                        window.location.href = "http://localhost:55157/home";
+                        window.location.href = "http://localhost:55157/Youtube/Home";
                     },
                     error: function (response) {
                         alert(response);
@@ -232,7 +232,7 @@
 
         function existFollow(id) {
                 $.ajax({
-                    url: '/users/existfollow/' +id,
+                    url: 'existfollow/' +id,
                     type: 'Get',
                     dataType: 'json',
                     success: function (response) {
@@ -260,9 +260,9 @@
 
         function searchAll() {
             var searchInput = $('#searchInput');
-            var searchText = searchInput.val().trim();
+            var searchText = searchInput.val();
 
-            var url = 'http://localhost:55157/search/' + searchText;
+            var url = 'http://localhost:55157/Youtube/search/' + searchText;
             window.location.href = url;
         };
 
@@ -278,7 +278,7 @@
         <nav class="navbar navbar-inverse" style="background:#333;">
             <div class="container-fluid" id="containerNavbar">
                 <div class="navbar-header">
-                    <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                    <a href="http://localhost:55157/Youtube/Home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
                 </div>
                 <div class="nav navbar-nav navbar-right" style="margin-top:10px;">
                     <div class="input-group">
@@ -356,7 +356,7 @@
                                     <h3>@video.Name</h3>
                                 </div>
                             </a>
-                            <a href="http://localhost:55157/users/@Model.Id" style="color:#00961a;"><h3>@Model.Username</h3></a>
+                            <a href="http://localhost:55157/Youtube/users/@Model.Id" style="color:#00961a;"><h3>@Model.Username</h3></a>
                             <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
                         </div>
                     </div>
@@ -392,7 +392,7 @@
                 {
                     <div class="col-lg-3">
                         <div class="FollowersContainer" style="text-align:center; margin-top:2em;">
-                            <a href="http://localhost:55157/users/@user.Id">
+                            <a href="http://localhost:55157/Youtube/users/@user.Id">
                                 <img src="~/uploads/@user.profilePictureUrl" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">
                                 <div class="cufCaption">
                                    <h3 style="margin-bottom:1em; color:#00961a; margin-left:20px;">@user.Username</h3>
@@ -411,7 +411,7 @@
                 {
                     <div class="col-lg-3">
                         <div class="FollowersContainer" style="text-align:center; margin-top:2em;">
-                            <a href="http://localhost:55157/users/@user.Id">
+                            <a href="http://localhost:55157/Youtube/users/@user.Id">
                                 <img src="~/uploads/@user.profilePictureUrl" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">
                                 <div class="cufCaption">
                                     <h3 style="margin-bottom:1em; color:#00961a; margin-left:20px;">@user.Username</h3>

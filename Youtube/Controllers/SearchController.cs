@@ -54,14 +54,20 @@ namespace Youtube.Controllers
                                    v.Description.Contains(searchText));
                 }
             }
-            foreach (var v in videos)
+            if (videos.Count() >0)
             {
-                v.Owner = _userData.GetById(v.OwnerId);
+                foreach (var v in videos)
+                {
+                    v.Owner = _userData.GetById(v.OwnerId);
+                }
             }
-            foreach (var c in comments)
+            if(comments.Count() > 0)
             {
-                c.User = _userData.GetById(c.UserId);
-                c.Video = _videoData.GetById(c.VideoId);
+                foreach (var c in comments)
+                {
+                    c.User = _userData.GetById(c.UserId);
+                    c.Video = _videoData.GetById(c.VideoId);
+                }
             }
 
             SearchViewModel searchViewModel = new SearchViewModel();

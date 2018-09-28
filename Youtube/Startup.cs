@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -58,7 +57,9 @@ namespace Youtube
         }
         private void configureRoutes(IRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
+            routeBuilder.MapRoute(
+                name:"Default",
+                template:"{Controller=User}/{Action=Home}/{id?}");
         }
     }
 }

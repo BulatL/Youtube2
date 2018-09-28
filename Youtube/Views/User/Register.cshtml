@@ -61,10 +61,10 @@
                 <label asp-for="Image"></label><br />
                 <input type="file" asp-for="Image" /><br />
             </div>
-            <button type="submit" class="btn btn-primary" style="margin-bottom:2em;">Save</button>
+            <button type="submit" class="btn btn-primary" style="width:5em; height:2.2em;margin-top:1em; margin-bottom:2em;">Save</button>
         </form>
-        <a href="http://localhost:55157/home" class="btn btn-danger" style="margin-bottom:2em;">Cancel</a>
-</div>
+        <button type="submit" class="btn btn-danger" onclick="history.back()" style="width:5em; height:2.2em; margin-bottom:1em;">Cancel</button>
+    </div>
     <script src="~/node_modules/jquery/dist/jquery.js"></script>
     <script src="~/node_modules/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>

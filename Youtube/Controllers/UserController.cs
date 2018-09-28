@@ -29,84 +29,7 @@ namespace Youtube.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        [HttpGet]
-        [Route("home")]
-        public IActionResult Home()
-        {
-            var loggedInUserUsername = HttpContext.Session.GetString("LoggedInUserUsername");
-            var loggedInUserRole = HttpContext.Session.GetString("LoggedInUserRole");
-            var loggedInUserId = HttpContext.Session.GetString("LoggedInUserId");
-
-            ViewBag.LoggedInUserUsername = loggedInUserUsername;
-            ViewBag.LoggedInUserRole = loggedInUserRole;
-            ViewBag.LoggedInUserId = loggedInUserId;
-
-            IEnumerable<Video> top5Videos = new List<Video>();
-            IEnumerable<Video> allVideos = new List<Video>();
-            List<VideoDTO> top5VideosDTO = new List<VideoDTO>();
-            List<VideoDTO> allVideosDTO = new List<VideoDTO>();
-
-            if (loggedInUserRole == null)
-            {
-                top5Videos = _videoData.GetTop5("NoUser", 0);
-                allVideos = _videoData.GetAllNoUser();
-            }
-            else
-            {
-                if (loggedInUserRole.Equals("Admin"))
-                {
-                    top5Videos = _videoData.GetTop5("Admin", long.Parse(loggedInUserId));
-                    allVideos = _videoData.GetAllForAdmin();
-                }
-                else
-                {
-                    top5Videos = _videoData.GetTop5("User", long.Parse(loggedInUserId));
-                    allVideos = _videoData.GetAllForUser(long.Parse(loggedInUserId));
-                }
-            }
-            if (top5Videos.Count() <= 0)
-            {
-                return NoContent();
-            }
-            foreach (var v in top5Videos)
-            {
-                v.Owner = _userData.GetById(v.OwnerId);
-                v.Owner.UserVideos = null;
-                VideoDTO videoDTO = VideoDTO.ConvertVideoToDTO(v);
-                top5VideosDTO.Add(videoDTO);
-            }
-
-            if (allVideos.Count() <= 0)
-            {
-                return NoContent();
-            }
-            foreach (var v in allVideos)
-            {
-                v.Owner = _userData.GetById(v.OwnerId);
-                v.Owner.UserVideos = null;
-                VideoDTO videoDTO = VideoDTO.ConvertVideoToDTO(v);
-                allVideosDTO.Add(videoDTO);
-            }
-
-            HomeVideoViewModel homeVideoViewModel = new HomeVideoViewModel();
-            homeVideoViewModel.AllVideos = allVideosDTO;
-            homeVideoViewModel.Top5Videos = top5VideosDTO;
-            var contentType = Request.ContentType;
-            if (contentType != null)
-            {
-                if (contentType.Equals("application/json"))
-                {
-                    return Json(homeVideoViewModel);
-                }
-                else if (contentType.Equals("text/html"))
-                {
-                    return View("~/Views/Shared/HomePage.cshtml", homeVideoViewModel);
-                }
-                return StatusCode(415);
-            }
-            return View("~/Views/Shared/HomePage.cshtml", homeVideoViewModel);
-
-        }
+        
 
         [HttpGet]
         [Route("users")]
@@ -227,7 +150,7 @@ namespace Youtube.Controllers
                 }
                 else if (contentType.Equals("text/html"))
                 {
-                    return RedirectToAction(nameof(Home));
+                    return RedirectToAction(nameof(HomeController.Home));
                 }
                 else if (contentType.Equals("application/x-www-form-urlencoded; charset=UTF-8"))
                 {
@@ -235,7 +158,7 @@ namespace Youtube.Controllers
                 }
                 return StatusCode(415);
             }
-            return RedirectToAction(nameof(Home));
+            return RedirectToAction(nameof(HomeController.Home));
         }
 
 
@@ -247,7 +170,7 @@ namespace Youtube.Controllers
             HttpContext.Session.Remove("LoggedInUserId");
             HttpContext.Session.Remove("LoggedInUserRole");
 
-            return RedirectToAction(nameof(Home));
+            return RedirectToAction(nameof(HomeController.Home));
         }
 
         [HttpGet]
@@ -309,15 +232,15 @@ namespace Youtube.Controllers
                     }
                     else if (contentType.Equals("text/html"))
                     {
-                        return RedirectToAction(nameof(Home));
+                        return RedirectToAction(nameof(HomeController.Home));
                     }
                     else if (contentType.Equals("application/x-www-form-urlencoded"))
                     {
-                        return RedirectToAction(nameof(Home));
+                        return RedirectToAction(nameof(HomeController.Home));
                     }
                     return RedirectToAction(nameof(GetById), user.Id);
                 }
-                return RedirectToAction(nameof(Home));
+                return RedirectToAction(nameof(HomeController.Home));
             }
             else
             {
@@ -349,7 +272,8 @@ namespace Youtube.Controllers
                 _commentData.Delete(c);
             }
             _userData.Delete(user);
-            if (user.Id == id)
+            int loggedInUserId = int.Parse(HttpContext.Session.GetString("LoggedInUserId"));
+            if (loggedInUserId == id)
             {
                 HttpContext.Session.Remove("LoggedInUserId");
                 HttpContext.Session.Remove("LoggedInUserRole");

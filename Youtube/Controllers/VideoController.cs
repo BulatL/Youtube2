@@ -66,6 +66,18 @@ namespace Youtube.Controllers
         }
 
         [HttpGet]
+        [Route("videos/one/{id}")]
+        public IActionResult GetOneVideoById(long id)
+        {
+            Video video = _videoData.GetById(id);
+            if(video == null)
+            {
+                return NotFound();
+            }
+            return Json(video);
+        }
+
+        [HttpGet]
         [Route("videos/{id}")]
         public IActionResult GetVideoById(long id)
         {

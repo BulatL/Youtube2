@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:55157/Home",
+      "applicationUrl": "http://localhost:55157/Youtube",
       "sslPort": 0
     }
   },

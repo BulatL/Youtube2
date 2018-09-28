@@ -13115,33 +13115,30 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Bula\\.nuget\\packages\\": {},
+    "C:\\Users\\Dusan\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "D:\\fax\\c#\\Youtube\\Youtube\\Youtube.csproj",
+      "projectUniqueName": "C:\\Users\\Dusan\\Desktop\\Youtube\\Youtube\\Youtube\\Youtube.csproj",
       "projectName": "Youtube",
-      "projectPath": "D:\\fax\\c#\\Youtube\\Youtube\\Youtube.csproj",
-      "packagesPath": "C:\\Users\\Bula\\.nuget\\packages\\",
-      "outputPath": "D:\\fax\\c#\\Youtube\\Youtube\\obj\\",
+      "projectPath": "C:\\Users\\Dusan\\Desktop\\Youtube\\Youtube\\Youtube\\Youtube.csproj",
+      "packagesPath": "C:\\Users\\Dusan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Dusan\\Desktop\\Youtube\\Youtube\\Youtube\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Bula\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Dusan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
-        "C:\\Program Files\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -13158,18 +13155,18 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+          "Microsoft.AspNetCore.All": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "[2.0.0, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0",
+            "version": "[2.0.0, )",
             "autoReferenced": true
           },
-          "Microsoft.AspNetCore.All": {
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "[2.0.0, )"
           }
         },
         "imports": [

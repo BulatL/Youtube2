@@ -12,24 +12,24 @@
     <script>
 
         $(document).ready(function (e) {
-            $.get('http://localhost:55157/loggedInUser', function (data) {
+            $.get('http://localhost:55157/Youtube/loggedInUser', function (data) {
                 if (data == null) {
                    
                 }
                 else {
                     var navbarHeader = $('.navbar-header');
                     navbarHeader.append(
-                        '<a href="http://localhost:55157/admin" class="navbar-brand" style="color:white;">Admin page</a>'
+                        '<a href="http://localhost:55157/Youtube/admin" class="navbar-brand" style="color:white;">Admin page</a>'
                     );
                     var navbarLogin = $('#navbarLogin');
                     navbarLogin.append(
-                        '<li><a href="http://localhost:55157/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
-                        '<li><a href="http://localhost:55157/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
+                        '<li><a href="http://localhost:55157/Youtube/users/' + data.id + '" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>' +
+                        '<li><a href="http://localhost:55157/Youtube/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
                     );
                 }
             });
 
-            $.get('http://localhost:55157/users', function (data) {
+            $.get('http://localhost:55157/Youtube/users', function (data) {
                 if (data != null) {
                     console.log(data);
                     var userDiv = $('#userDiv');
@@ -39,8 +39,8 @@
                             '<div class="col-lg-3">' +
                                 '<div class="container" id="containerUser">' +
                                     '<div class="container">' +
-                                        '<a href="http://localhost:55157/users/' + data[i].id + '">' +
-                                            '<img src="/uploads/' + data[i].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
+                                        '<a href="http://localhost:55157/Youtube/users/' + data[i].id + '">' +
+                                            '<img src="http://localhost:55157/Youtube/uploads/' + data[i].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
                                             '<div class="cufCaption">' +
                                                 '<h3 style="margin-left:20px;">' + data[i].username + '</h3>' +
                                             '</div>' +
@@ -208,7 +208,7 @@
                     '<div class="col-lg-3">' +
                     '<div class="container" id="containerUser">' +
                     '<div class="container">' +
-                    '<a href="http://localhost:55157/users/' + data[i].id + '">' +
+                    '<a href="http://localhost:55157/Youtube/users/' + data[i].id + '">' +
                     '<img src="/uploads/' + data[i].profilePictureUrl + '" class="imgVideo" style="width:120px; height:120px;border-radius: 25px;">' +
                     '<div class="cufCaption">' +
                     '<h3 style="margin-left:20px;">' + data[i].username + '</h3>' +
@@ -267,7 +267,7 @@
         <nav class="navbar navbar-inverse" style="background:#333;">
             <div class="container-fluid" id="containerNavbar">
                 <div class="navbar-header">
-                    <a href="http://localhost:55157/home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                    <a href="http://localhost:55157/Youtube/Home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right" id="navbarLogin"></ul>
             </div>

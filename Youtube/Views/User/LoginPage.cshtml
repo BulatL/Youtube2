@@ -29,7 +29,7 @@
             console.log(userName);
             console.log(password);
                 $.ajax({
-                    url: '/login',
+                    url: 'login',
                     type: 'post',
                     dataType: 'json',
                     data: {
@@ -37,7 +37,7 @@
                         "password": password
                     },
                     success: function (response) {
-                        window.location.href = "http://localhost:55157/home";
+                        window.location.href = "http://localhost:55157/Youtube/Home";
                     },
                     error: function (response, jqXHR) {
                         alert("Wrong username/password");
