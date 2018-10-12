@@ -1,0 +1,43 @@
+﻿body {
+    background-image: url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+    margin: 0;
+    padding: 0;
+    background-size: inherit;
+    background-position: center;
+    font-family: sans-serif;
+}
+
+img {
+    width: 180px;
+    height: 180px;
+}
+
+#form span {
+    color: red;
+}
+
+#btnSave {
+    margin-top: 1em;
+    margin-bottom: 2em;
+    border-radius:15px;
+}
+
+#btnCancel {
+    border-radius: 15px;
+    margin-bottom: 2em;
+}
+
+div {
+    margin-top: 1em;
+}
+
+.container-fluid {
+    margin-top: 3em;
+    text-align: center;
+    color: white;
+}
+#imgUser {
+    width: 120px;
+    height: 120px;
+    border-radius: 25px;
+}

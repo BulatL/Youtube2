@@ -1,0 +1,67 @@
+﻿body {
+    background-image: url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+    margin: 0;
+    padding: 0;
+    background-size: inherit;
+    background-position: center;
+    font-family: sans-serif;
+}
+#navBar {
+    background: #333;
+}
+a {
+    color: white;
+}
+.container-fluid {
+    text-align: center
+}
+#searchOptionsDiv {
+    color:white; 
+    margin-top:3em;
+}
+#search {
+    margin-left: 1em;
+    width: 3em;
+    height: 1.8em;
+    margin-top: 0.2em;
+}
+h2 {
+    margin-top: 5em;
+    margin-bottom: 2em;
+    text-align: center;
+    color: white;
+}
+h3 {
+    margin-top:0.5em;
+    margin-left: 0.2em;
+}
+#userInfo{
+    color:white;
+}
+#btnDelete, #btnBlock, #btnPromote {
+    margin-top: 1em;
+    margin-right: 1em;
+    border-radius: 15px;
+    width: 5em;
+}
+.imgUser {
+    width: 120px;
+    height: 120px;
+    border-radius: 25px;
+}
+#containerUser {
+    margin-bottom: 2em;
+}
+footer {
+    height: 2em;
+    background-color: #333;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    position: fixed;
+}
+p {
+    color: white;
+    padding: 0 30px;
+    font-size: 20px;
+}

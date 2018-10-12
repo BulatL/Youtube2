@@ -4,76 +4,59 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width" />
-        <title>Add video</title>
-        <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="~/node_modules/jquery/dist/jquery.js"></script>
-        <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-        <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
-
-        <script>
-            $(document).ready(function (e) {
-                $.get('http://localhost:55157/Youtube/loggedInUser', function (data) {
-                    if (data == null) {
-                        alert("You can't access this page")
-                        history.back();
-                    }
-                    else if (data.blocked == true) {
-                        alert("You can't access this page")
-                        history.back();
-                    }
-                });
-            });
-        </script>
-    </head>
-    <body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
-                     margin: 0;
-                     padding: 0;
-                     background-size: inherit;
-                     background-position: center;
-                     font-family: sans-serif;">
-        <div class="container-fluid" style="margin-top:3em; text-align:center; color:white;">
-            <img src="~/uploads/addVideo.png" style="width:180px; height:180px;" class="avatar">
-            <form method="post" enctype="multipart/form-data">
-                <div style="margin-top:1em;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Add video</title>
+    <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/node_modules/jquery/dist/jquery.js"></script>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
+    <script src="~/JavaScript/AddVideoPage.js"></script>
+    <link href="~/Css/AddVideoPage.css" rel="stylesheet" />
+</head>
+    <body>
+        <div class="container-fluid">
+            <img src="~/uploads/addVideo.png" id="image" class="avatar">
+            <form method="post" enctype="multipart/form-data" id="form">
+                <div>
                     <label asp-for="VideoUrl"></label><br />
                     <input asp-for="VideoUrl" /><br />
-                    <span asp-validation-for="VideoUrl" style="color:red;"></span>
+                    <span asp-validation-for="VideoUrl"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="Name"></label><br />
                     <input asp-for="Name" /><br />
-                    <span asp-validation-for="Name" style="color:red;"></span>
+                    <span asp-validation-for="Name"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="Description"></label><br />
                     <input asp-for="Description" /><br />
-                    <span asp-validation-for="Description" style="color:red;"></span>
+                    <span asp-validation-for="Description"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="Visibility"></label>
                     <select asp-for="Visibility"
                             asp-items="@Html.GetEnumSelectList<Visibility>()"></select>
-                    <span asp-validation-for="Visibility" style="color:red;"></span>
+                    <span asp-validation-for="Visibility"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="AllowComments"></label><br />
                     <input type="checkbox" asp-for="AllowComments" /><br />
-                    <span asp-validation-for="AllowComments" style="color:red;"></span>
+                    <span asp-validation-for="AllowComments"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="AllowRaiting"></label><br />
                     <input type="checkbox" asp-for="AllowRaiting" /><br />
-                    <span asp-validation-for="AllowRaiting" style="color:red;"></span>
+                    <span asp-validation-for="AllowRaiting"></span>
                 </div>
-                <div style="margin-top:1em;">
+                <div>
                     <label asp-for="Image"></label><br />
-                    <input type="file" asp-for="Image" /><br />
+                    <input type="file" accept="image/*" asp-for="Image" /><br />
                 </div>
-                <button type="submit" class="btn btn-primary" style="margin-bottom:2em;">Save</button>
+                <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
             </form>
+            <button onclick="history.back()" class="btn btn-danger" id="btnBack">Back</button>
         </div>
         <script src="~/node_modules/jquery/dist/jquery.js"></script>
         <script src="~/node_modules/jquery-validation/dist/jquery.validate.js"></script>

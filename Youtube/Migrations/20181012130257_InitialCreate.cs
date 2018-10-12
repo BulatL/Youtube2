@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Youtube.Migrations
 {
-    public partial class InitialCrate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

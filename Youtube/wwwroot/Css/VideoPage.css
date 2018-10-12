@@ -1,0 +1,211 @@
+﻿body {
+    background-image: url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
+    margin: 0;
+    padding: 0;
+    background-size: inherit;
+    background-position: center;
+    font-family: sans-serif;
+}
+
+#navBar {
+    background: #333;
+}
+
+a {
+    color: white;
+}
+
+.container-fluid, #videosDiv, .FollowersContainer {
+    text-align: center;
+    margin-top: 3em;
+}
+
+h2 {
+    margin-top: 3em;
+    text-align: center;
+    color: white;
+}
+
+h3 {
+    margin-top: 1em;
+    color: #00961a;
+    margin-left: 20px;
+}
+
+h4 {
+    margin-bottom: 1em;
+    color: white;
+}
+
+#searchOptionsDiv {
+    color: white;
+    margin-top: 3em;
+}
+
+#search {
+    margin-left: 1em;
+    width: 3em;
+    height: 1.8em;
+    margin-top: 0.2em;
+}
+
+#input-group {
+    margin-top: 2em;
+}
+
+.Video, #usersDiv, #commentsDiv {
+    text-align: center;
+}
+
+#ownerName {
+    color: #00961a;
+}
+
+.imgVideo {
+    height: 200px;
+    width: 300px;
+    border-radius: 25px;
+}
+
+#commentsInfoDiv {
+    color: white;
+}
+
+footer {
+    height: 2em;
+    background-color: #333;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    position: fixed;
+}
+
+p {
+    color: white;
+    padding: 0 30px;
+    font-size: 20px;
+}
+
+#videoFrame {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.videoInformationInput {
+    border: none;
+    font-size: 2.5em;
+    background: none;
+    color: white;
+    margin-left: 0.5em;
+}
+
+#videoBrPregleda {
+    border: none;
+    font-size: 2.5em;
+    background: none;
+    color: white;
+}
+
+#btnUnlike, #btnLike {
+    width: 50px;
+    height: 50px;
+}
+
+.floatRight{
+    float:right;
+}
+
+#videoBrLajkova {
+    border: none;
+    font-size: 1.5em;
+    background: none;
+    color: white;
+    width: 3em;
+    margin-left: 1em;
+}
+
+#videoInformationContainer {
+    margin-left: -1.7em;
+}
+
+#ownerUsername {
+    font-size: 2em;
+}
+
+#videoOpis {
+    border: outset;
+    background: none;
+    color: white;
+    font-size: 1.5em;
+}
+
+#videoNaziv {
+    border: none;
+    background: none;
+    color: white;
+    font-size: 1.5em;
+}
+
+#editVideoButtons {
+    margin-bottom: 2em;
+    margin-left: -1.5em;
+}
+
+#komentarInput {
+    border: outset;
+    background: none;
+    color: white;
+    font-size: 1.5em;
+    width: 40em;
+    margin-bottom: 1em;
+}
+
+#komentarInputButtons, #glavniKomentarDiv {
+    margin-bottom: 2em;
+}
+
+#btnPost {
+    margin-bottom: 0.5em;
+    width: 5em;
+}
+
+.komentarContainer {
+    border:outset
+}
+
+.avatar {
+    margin: 0.5em;
+    width: 80px;
+    height: 80px;
+    border-radius: 25px;
+}
+
+.komentarOpis {
+    margin-left: 0.5em;
+    border: outset;
+    background: none;
+    color: white;
+    font-size: 1.5em;
+    width: 20em;
+    margin-bottom: 1em;
+}
+
+#komentarDatum {
+    margin-left: 0.5em;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 1.5em;
+}
+
+#editComment {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.deleteCommentButton {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}

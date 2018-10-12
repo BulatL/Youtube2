@@ -10,60 +10,22 @@
         <script src="~/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
         <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
-
-        <script>
-            $(document).ready(function (e) {
-                $.get('loggedInUser', function (data) {
-                    if (data == null) {
-                        var navbarLogin = $('#navbarLogin');
-                        navbarLogin.append(
-                            '<li><a href="http://localhost:55157/Youtube/register" style="color:white;"><span class="glyphicon glyphicon-user"></span> Register</a></li>' +
-                            '<li><a href="http://localhost:55157/Youtube/login" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Login</a></li>'
-                        );
-                    }
-                    else{
-                        var navbarHeader = $('.navbar-header');
-                        navbarHeader.append(
-                            '<a href="http://localhost:55157/Youtube/admin" class="navbar-brand" style="color:white;">Admin page</a>'
-                        );
-                        var navbarLogin = $('#navbarLogin');
-                        navbarLogin.append(
-                            '<li><a href="http://localhost:55157/Youtube/users/'+data.id+'" style="color:white;"><span class="glyphicon glyphicon-user"></span> My channel</a></li>'+
-                            '<li><a href="http://localhost:55157/Youtube/logout" style="color:white;"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>'
-                        );
-                    }
-                });
-            });
-
-            function searchAll() {
-                var searchInput = $('#searchInput');
-                var searchText = searchInput.val().trim();
-
-                var url = 'search/' + searchText;
-                window.location.href = url;
-            };
-        </script>
+        <script src="~/JavaScript/HomePage.js"></script>
+        <link href="~/Css/HomePage.css" rel="stylesheet" />
     </head>
-    <body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
-                 margin: 0;
-                 padding: 0;
-                 background-size: inherit;
-                 background-position: center;
-                 font-family: sans-serif;">
+    <body>
         <div class="container-fluid">
-
-
             <div class="container-fluid">
-                <nav class="navbar navbar-inverse" style="background:#333;">
+                <nav class="navbar navbar-inverse" id="navBar">
                     <div class="container-fluid" id="containerNavbar">
                         <div class="navbar-header">
-                            <a href="http://localhost:55157/Youtube/Home" class="navbar-brand" style="color:white;"><span class="glyphicon glyphicon-home"></span> Youtube</a>
+                            <a href="http://localhost:55157/Youtube/Home" class="navbar-brand"><span class="glyphicon glyphicon-home"></span> Youtube</a>
                         </div>
-                        <div class="nav navbar-nav navbar-right" style="margin-top:10px;">
+                        <div class="nav navbar-nav navbar-right">
                             <div class="input-group">
                                 <input type="text" name="searchInput" placeholder="Search" class="form-control" id="searchInput">
                                 <div class="input-group-btn">
-                                    <a onclick="searchAll()"><img id="search" src="~/uploads/search.png" style="margin-left:1em;width:3em; height:1.8em; margin-top:0.2em;"></a>
+                                    <a onclick="searchAll()"><img id="search" src="~/uploads/search.png"></a>
                                 </div>
                             </div>
                         </div>
@@ -72,61 +34,54 @@
                     </div>
                 </nav>
             </div>
-
         </div>
-        <h2 style="margin-top:3em; text-align:center; color:white;">Top 5 videos</h2>
-        <div class="container-fluid" style="margin-top:5em;">
+
+        <h2>Top 5 videos</h2>
+        <div class="container-fluid">
             <div class="container-fluid" id="videoContainer">
                 <div class="row">
                     @foreach (var video in Model.Top5Videos)
                     {
                         <div class="col-lg-3">
-                            <div class="Video" style="text-align:center;">
-                                <a href="http://localhost:55157/Youtube/videos/@video.Id" style="color:#00961a;font-weight: bold;">
-                                    <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                            <div class="Video">
+                                <a href="http://localhost:55157/Youtube/videos/@video.Id" class="videoName">
+                                    <img src="~/uploads/@video.PhotoUrl" class="imgVideo">
                                     <div class="caption">
                                         <h3>@video.Name</h3>
                                     </div>
                                 </a>
-                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
-                                <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" class="ownerName"><h3>@video.User.Username</h3></a>
+                                <h4>@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
                             </div>
                         </div>
                     }
                 </div>
             </div>
         </div>
-        <h2 style="margin-top:5em; text-align:center; color:white;">All videos</h2>
-        <div class="container-fluid" style="margin-top: 5em;">
+        <h2>All videos</h2>
+        <div class="container-fluid">
             <div class="container-fluid" id="videoContainer">
                 <div class="row">
                     @foreach (var video in Model.AllVideos)
                     {
                         <div class="col-lg-3">
-                            <div class="Video" style="text-align:center;">
-                                <a href="http://localhost:55157/Youtube/videos/@video.Id" asp-rout-id="@video.Id" style="color:#00961a;font-weight: bold;">
-                                    <img src="~/uploads/@video.PhotoUrl" class="imgVideo" style="height: 200px;width: 300px;border-radius: 25px;">
+                            <div class="Video">
+                                <a href="http://localhost:55157/Youtube/videos/@video.Id" class="videoName">
+                                    <img src="~/uploads/@video.PhotoUrl" class="imgVideo">
                                     <div class="caption">
                                         <h3>@video.Name</h3>
                                     </div>
                                 </a>
-                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" style="color:#00961a;"><h3>@video.User.Username</h3></a>
-                                <h4 style="margin-bottom:1em; color:white;">@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
+                                <a href="http://localhost:55157/Youtube/users/@video.User.Id" class="ownerName"><h3>@video.User.Username</h3></a>
+                                <h4>@video.Description<br>@video.NumberOfViews views<br>@video.CreationDate</h4>
                             </div>
                         </div>
                     }
                 </div>
             </div>
         </div>
-        <footer style="height: 2em;
-                       background-color: #333; 
-                       bottom: 0;
-                       left: 0;
-                       width: 100vw;
-                       position: fixed;">
-            <p style="color: white;
-                      padding: 0 30px;
-                      font-size: 20px;">
+        <footer>
+            <p>
             Copyright &#169 2018 Luka Bulatovic</p>
         </footer>
         <script src="~/node_modules/jquery/dist/jquery.js"></script>

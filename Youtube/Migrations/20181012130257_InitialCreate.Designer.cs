@@ -12,8 +12,8 @@ using Youtube.Models;
 namespace Youtube.Migrations
 {
     [DbContext(typeof(YoutubeDbContext))]
-    [Migration("20180918164656_InitialCrate")]
-    partial class InitialCrate
+    [Migration("20181012130257_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

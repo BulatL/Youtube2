@@ -11,42 +11,7 @@
     <script src="~/node_modules/jquery/dist/jquery.js"></script>
     <link href="~/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC1_dW9uDxHWZeA6K9kjI4WeizbpzqsThWph3NGqxlpTG4yE1SbQ">
-    
-
-    <script>
-
-        function login() {
-            var userNameInput = $('#userNameInput');
-            var passwordInput = $('#passwordInput');
-
-            var userName = userNameInput.val().trim();
-            var password = passwordInput.val().trim();
-
-            if (userName == "" || password == "") {
-                alert("All fields must be filled.")
-                return;
-            }
-            console.log(userName);
-            console.log(password);
-                $.ajax({
-                    url: 'login',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        "username": userName,
-                        "password": password
-                    },
-                    success: function (response) {
-                        window.location.href = "http://localhost:55157/Youtube/Home";
-                    },
-                    error: function (response, jqXHR) {
-                        alert("Wrong username/password");
-                    }
-            });
-        }
-    </script>
-
-
+    <script src="~/JavaScript/LoginPage.js"></script>
 
 </head>
 <body style="background-image:url(http://wallpoper.com/images/00/31/33/51/black-background_00313351.jpg);
